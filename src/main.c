@@ -55,41 +55,49 @@ int main(void)
   GPIO_InitStructure.GPIO_Pin = R1 | G1 | B1 | R2 | G2 | B2 | A | B | C | D | CLK | LAT | OE;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
   GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 
   uint16_t counter;
   uint16_t port_val;
-  // counter = 0;
-  // uint8_t row;
-  // row = 0;
-
-  if (data[25] > 5) Reset(OE);
 
   while (1)
   {
     for (counter=0; counter<1024; counter++) {
       port_val = (data[counter] & 0b0000000111111111);
+      // Keep the display off
       port_val |=                 0b1000000000000000;
+      Delay(DELAY_PERIOD);
       GPIO_Write(GPIOA, port_val);
+
       port_val |=                 0b0010000000000000;
+      Delay(DELAY_PERIOD);
       GPIO_Write(GPIOA, port_val);
+
       port_val &=                ~0b0010000000000000;
+      Delay(DELAY_PERIOD);
       GPIO_Write(GPIOA, port_val);
+
 
       if (counter % 128 == 127) {
         // Latch
         port_val |=               0b0100000000000000;
+        Delay(DELAY_PERIOD);
         GPIO_Write(GPIOA, port_val);
+
         port_val &=              ~0b0100000000000000;
+        Delay(DELAY_PERIOD);
         GPIO_Write(GPIOA, port_val);
+
 
         // Strobe
         port_val &=              ~0b1000000000000000;
+        Delay(DELAY_PERIOD);
         GPIO_Write(GPIOA, port_val);
         port_val |=               0b1000000000000000;
+        Delay(DELAY_PERIOD);
         GPIO_Write(GPIOA, port_val);
       }
     }
