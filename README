@@ -1,0 +1,4 @@
+Code is in protopyte stage and has been used to understand the HUB75 protocol. It may be useable in its current form but is likely to need some minor tweaks to get it working on your platform.
+
+It is written to run on an STM32F4-Discovery board.
+Pinouts are as defined in the file src/main.c
